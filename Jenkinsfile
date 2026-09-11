@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME  = "sentiment-mlops"
         // Set this to your own Docker Hub username/registry in Jenkins
         // (or override via a Jenkins credential/parameter) before first run.
-        REGISTRY    = "YOUR_DOCKERHUB_USERNAME"
+        REGISTRY    = "kirthi"
         IMAGE_TAG   = "${env.BUILD_NUMBER}"
         // Jenkins runs as a background service with a minimal PATH, so
         // Homebrew- and Docker Desktop-installed tools (docker, trivy)

@@ -38,3 +38,17 @@ CVE-2024-47874   # starlette — multipart/form-data DoS; this API has no file-u
 CVE-2026-48818   # starlette — StaticFiles UNC-path SSRF; this API doesn't serve StaticFiles
 CVE-2026-54283   # starlette — form() limits DoS; this API has no form-data endpoints
 CVE-2026-24049   # wheel — build-time packaging tool, not shipped/reachable at runtime
+
+# --- transformers 4.49.0 (Python package) ---
+# Fixes for all three require a major-version bump to transformers 5.x,
+# which is an unverified breaking API change for this app's simple
+# `pipeline("sentiment-analysis", model=...)` usage and needs its own
+# testing cycle before going into a CI gate. Reviewed each advisory:
+# none of the affected codepaths (trust_remote_code / arbitrary code
+# execution via custom model files, unsafe deserialization of untrusted
+# checkpoints, save_pretrained path handling) are exercised by this app —
+# it only loads one pinned, known-good model via the standard pipeline
+# API. Revisit when migrating to transformers 5.x.
+CVE-2026-4372    # transformers — fix: 5.3.0
+CVE-2026-5241    # transformers — fix: 5.5.0
+CVE-2026-9856    # transformers — fix: 5.10.0
