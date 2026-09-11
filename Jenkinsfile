@@ -7,6 +7,11 @@ pipeline {
         // (or override via a Jenkins credential/parameter) before first run.
         REGISTRY    = "YOUR_DOCKERHUB_USERNAME"
         IMAGE_TAG   = "${env.BUILD_NUMBER}"
+        // Jenkins runs as a background service with a minimal PATH, so
+        // Homebrew- and Docker Desktop-installed tools (docker, trivy)
+        // aren't found by default. Add the common install locations for
+        // both Apple Silicon and Intel Macs.
+        PATH = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
     }
 
     stages {

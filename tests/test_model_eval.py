@@ -34,4 +34,5 @@ def test_model_latency_is_reasonable():
     start = time.perf_counter()
     predict("Quick latency check.")
     elapsed = time.perf_counter() - start
-    assert elapsed < LATENCY_THRESHOLD_SECONDS, f"inference took {elapsed:.2f}s, over {LATENCY_THRESHOLD_SECONDS}s threshold"
+    msg = f"inference took {elapsed:.2f}s, over {LATENCY_THRESHOLD_SECONDS}s"
+    assert elapsed < LATENCY_THRESHOLD_SECONDS, msg
