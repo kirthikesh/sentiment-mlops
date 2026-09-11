@@ -1,0 +1,40 @@
+# Accepted-risk vulnerabilities, reviewed on 2026-09-11.
+#
+# Rule of thumb used here: anything with a "Fixed Version" in the Trivy
+# report gets fixed by bumping the dependency (see requirements.txt —
+# torch and transformers were bumped for exactly this reason). Anything
+# listed below has NO fix currently available upstream, so ignoring it is
+# a deliberate, documented decision rather than a suppressed unknown.
+
+# --- Debian base-image OS packages (python:3.11-slim / Debian 13 "trixie") ---
+# util-linux family — no fixed version published by Debian yet. Affects
+# bsdutils, libblkid1, liblastlog2-2, libmount1, libsmartcols1, libuuid1,
+# login, mount, util-linux. None of these codepaths (privileged mount
+# helpers, nsenter, cgroup migration) are reachable from this container —
+# it runs as an unprivileged app process, not a mount/namespace tool.
+CVE-2026-76642
+CVE-2026-78408
+CVE-2026-78409
+CVE-2026-78410
+
+CVE-2026-41992   # gzip — no fix yet; gzip isn't invoked by the app at runtime
+CVE-2026-54369   # libacl1 — no fix yet; ACL syscalls not used by the app
+CVE-2025-69720   # ncurses (libncursesw6/libtinfo6/ncurses-base/ncurses-bin) — no fix yet; no interactive TTY usage
+CVE-2026-11822   # libsqlite3-0 — no fix yet; app doesn't use SQLite
+CVE-2026-11824   # libsqlite3-0 — no fix yet; app doesn't use SQLite
+CVE-2026-16742   # libsystemd0 / libudev1 — no fix yet; systemd-homed not in use
+CVE-2026-13221   # perl-base — no fix yet; app doesn't invoke perl
+CVE-2026-8376    # perl-base — no fix yet; app doesn't invoke perl
+CVE-2026-57432   # perl-base — no fix yet; app doesn't invoke perl
+CVE-2026-57433   # perl-base (Storable) — no fix yet; app doesn't invoke perl
+CVE-2026-42496   # perl-Archive-Tar — fix_deferred upstream; app doesn't invoke perl
+CVE-2026-42497   # perl-Archive-Tar — fix_deferred upstream; app doesn't invoke perl
+CVE-2026-48962   # perl-IO-Compress — fix_deferred upstream; app doesn't invoke perl
+CVE-2026-9538    # perl-Archive-Tar — fix_deferred upstream; app doesn't invoke perl
+
+# --- Python packages ---
+CVE-2026-23949   # jaraco.context, vendored inside setuptools — build-time only, not runtime-reachable
+CVE-2024-47874   # starlette — multipart/form-data DoS; this API has no file-upload endpoints
+CVE-2026-48818   # starlette — StaticFiles UNC-path SSRF; this API doesn't serve StaticFiles
+CVE-2026-54283   # starlette — form() limits DoS; this API has no form-data endpoints
+CVE-2026-24049   # wheel — build-time packaging tool, not shipped/reachable at runtime

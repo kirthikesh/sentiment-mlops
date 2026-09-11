@@ -59,7 +59,7 @@ pipeline {
                 // Fails the build on HIGH/CRITICAL vulnerabilities. exit-code 1
                 // makes this a real gate, not just a report.
                 sh '''
-                    trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress ${IMAGE_NAME}:${IMAGE_TAG}
+                    trivy image --severity HIGH,CRITICAL --exit-code 1 --ignorefile .trivyignore --no-progress ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
         }
