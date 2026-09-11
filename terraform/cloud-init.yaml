@@ -1,0 +1,28 @@
+#cloud-config
+package_update: true
+
+runcmd:
+  # t3.micro has only 1GB RAM — add 2GB swap so torch/transformers don't
+  # OOM when the model loads alongside k3s. Worth calling out in the README
+  # as a deliberate memory-constraint workaround, not an accident.
+  - fallocate -l 2G /swapfile
+  - chmod 600 /swapfile
+  - mkswap /swapfile
+  - swapon /swapfile
+  - echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
+  # Install k3s (lightweight Kubernetes), single-node. Bundled Traefik
+  # ingress controller stays enabled — it routes traffic to the
+  # model-serving Service once deployed in later phases.
+  #
+  # --tls-san: k3s's server cert only covers the private/internal IPs it
+  # sees at install time by default, which breaks kubectl from outside the
+  # VPC (public IP not in the cert's SAN list). Look up the instance's own
+  # public IP via the EC2 metadata service and register it as a valid SAN
+  # at install time so this works out of the box on every fresh apply.
+  - |
+    PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+    curl -sfL https://get.k3s.io | sh -s - --tls-san "$PUBLIC_IP"
+  - sleep 15
+  - chmod 644 /etc/rancher/k3s/k3s.yaml
+  - echo "k3s install complete" > /home/ubuntu/k3s-ready.txt
